@@ -6,7 +6,7 @@ build image arch=default_platform:
         ./{{image}}
 
 build-qcow2 image arch=default_platform:
-    mkdir -p .osbuild/output/{{image}}
+    mkdir -p .osbuild/{{image}}/output
     podman run \
         --rm \
         -it \
@@ -21,7 +21,7 @@ build-qcow2 image arch=default_platform:
             --local localhost/{{image}}:latest
 
 build-raw image:
-    mkdir -p .osbuild/output/{{image}}
+    mkdir -p .osbuild/{{image}}/output
     podman run \
         --rm \
         -it \
@@ -36,7 +36,7 @@ build-raw image:
             --local localhost/{{image}}:latest
 
 build-vmdk image:
-    mkdir -p .osbuild/output/{{image}}
+    mkdir -p .osbuild/{{image}}/output
     podman run \
         --rm \
         -it \

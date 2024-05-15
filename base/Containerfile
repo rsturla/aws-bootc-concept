@@ -4,9 +4,14 @@ FROM quay.io/fedora/fedora-bootc:40
 COPY files/ /
 
 RUN dnf -y install \
-    clamav clamd clamav-data clamav-update && \
+        clamav clamd clamav-data clamav-update && \
     systemctl enable clamav-freshclam.service && \
-    systemctl enable clamav-clamonacc.service
+    systemctl enable clamav-clamonacc.service && \
+    systemctl enable clamd@scan.service
 
 RUN dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm && \
-    systemctl enable amazon-ssm-agent
+    systemctl disable amazon-ssm-agent
+
+# Overwrite any files that have been added by the packages
+# These will fail the merge on boot, so we must push them to /etc
+COPY files/usr/etc /etc
