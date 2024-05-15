@@ -1,0 +1,12 @@
+# FROM quay.io/fedora/fedora-coreos:stable
+FROM quay.io/fedora/fedora-bootc:40
+
+COPY files/ /
+
+RUN dnf -y install \
+    clamav clamd clamav-data clamav-update && \
+    systemctl enable clamav-freshclam.service && \
+    systemctl enable clamav-clamonacc.service
+
+RUN dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm && \
+    systemctl enable amazon-ssm-agent
