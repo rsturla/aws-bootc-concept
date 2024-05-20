@@ -3,12 +3,15 @@ FROM quay.io/fedora/fedora-bootc:40
 
 COPY files/ /
 
+# Install and configure ClamAV
 RUN dnf -y install \
         clamav clamd clamav-data clamav-update && \
     systemctl enable clamav-freshclam.service && \
     systemctl enable clamav-clamonacc.service && \
     systemctl enable clamd@scan.service && \
-    useradd -G clamscan,virusgroup -r clamav
+    groupadd clamav && \
+    useradd -g clamav -G clamscan,virusgroup -s /bin/false -c "Clam Antivirus" clamav && \
+    setsebool -P antivirus_can_scan_system 1
 
 RUN dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm && \
     systemctl disable amazon-ssm-agent
